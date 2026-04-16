@@ -11,3 +11,6 @@ class Lesson(BaseModel):
     description: str
     difficulty: Difficulty = "starter"
     tags: list[str] = Field(default_factory=list)
+    # ids referenced from the shared /vision/gestures catalog.
+    gesture_ids: list[str] = Field(default_factory=list)
+    scenario_tag: str | None = None
