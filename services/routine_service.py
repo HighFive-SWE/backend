@@ -139,6 +139,96 @@ _SEED: list[Routine] = [
             ),
         ],
     ),
+    # phase 8 expansion
+    Routine(
+        id="school-day",
+        name="school day",
+        description="signs you might use before, during, or after school.",
+        scenario_tag="daily",
+        steps=[
+            RoutineStep(
+                gesture_id="hello",
+                prompt="greet your teacher",
+                hint="open palm wave.",
+            ),
+            RoutineStep(
+                gesture_id="school",
+                prompt="sign 'school'",
+                hint="flat palms clapping — calling attention.",
+            ),
+            RoutineStep(
+                gesture_id="friend",
+                prompt="sign 'friend'",
+                hint="hook index fingers and swap.",
+            ),
+            RoutineStep(
+                gesture_id="finished",
+                prompt="sign 'finished'",
+                hint="open palms flipped outward — day's done.",
+            ),
+        ],
+    ),
+    Routine(
+        id="doctor-visit",
+        name="doctor visit",
+        description="practise telling the doctor what you need.",
+        scenario_tag="safety",
+        steps=[
+            RoutineStep(
+                gesture_id="hello",
+                prompt="greet the doctor",
+                hint="open palm wave.",
+            ),
+            RoutineStep(
+                gesture_id="doctor",
+                prompt="sign 'doctor'",
+                hint="'d' hand tapped on the wrist.",
+            ),
+            RoutineStep(
+                gesture_id="pain",
+                prompt="sign 'pain'",
+                hint="index out — firm jab.",
+            ),
+            RoutineStep(
+                gesture_id="help",
+                prompt="ask for 'help'",
+                hint="thumb up fist, lifted.",
+            ),
+            RoutineStep(
+                gesture_id="thank_you",
+                prompt="sign 'thank you'",
+                hint="flat hand from chin outward.",
+            ),
+        ],
+    ),
+    Routine(
+        id="play-time",
+        name="play time",
+        description="hang out with friends — invite, play, and wrap up.",
+        scenario_tag="family",
+        steps=[
+            RoutineStep(
+                gesture_id="come",
+                prompt="beckon a friend",
+                hint="index finger beckoning — palm up.",
+            ),
+            RoutineStep(
+                gesture_id="play",
+                prompt="sign 'play'",
+                hint="'y' hand — thumb and pinky out, shake.",
+            ),
+            RoutineStep(
+                gesture_id="more",
+                prompt="ask for 'more'",
+                hint="pinched fingertips tapped together.",
+            ),
+            RoutineStep(
+                gesture_id="finished",
+                prompt="sign 'finished'",
+                hint="open palms flipped outward.",
+            ),
+        ],
+    ),
 ]
 
 
