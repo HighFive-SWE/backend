@@ -13,6 +13,10 @@ class ProgressRecord(BaseModel):
     band: str  # "correct" | "partial" | "incorrect"
     attempts: int
     succeeded: bool
+    # landmark indices that drifted past the comparator's joint threshold on
+    # the best sample of this attempt. phase 6 analytics uses it for the
+    # finger heatmap. defaults to [] so older clients stay compatible.
+    incorrect_points: list[int] = Field(default_factory=list)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 

@@ -14,6 +14,7 @@ class ProgressCreateRequest(BaseModel):
     attempts: int = Field(ge=1)
     succeeded: bool
     completed_routine: bool = False
+    incorrect_points: list[int] = Field(default_factory=list)
 
 
 class ProgressCreateResponse(BaseModel):

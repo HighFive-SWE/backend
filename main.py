@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from core.config import settings
-from routes import cv, health, lessons, profiles, progress, routines
+from routes import analytics, cv, health, lessons, profiles, progress, routines
 
 
 def create_app() -> FastAPI:
@@ -26,6 +26,7 @@ def create_app() -> FastAPI:
     app.include_router(cv.router)
     app.include_router(profiles.router)
     app.include_router(progress.router)
+    app.include_router(analytics.router)
 
     return app
 

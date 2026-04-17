@@ -134,6 +134,10 @@ class ProgressService:
         records.reverse()
         return records
 
+    def all_records(self, profile_id: str) -> list[ProgressRecord]:
+        # oldest-first, used by analytics for trend + aggregation.
+        return list(self._logs.get(profile_id, ()))
+
     def summary(self, profile_id: str) -> ProgressSummary:
         records = list(self._logs.get(profile_id, ()))
         state = self._state.get(profile_id, ProfileState())

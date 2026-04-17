@@ -36,6 +36,7 @@ class ProgressController:
                 band=payload.band,
                 attempts=payload.attempts,
                 succeeded=payload.succeeded,
+                incorrect_points=payload.incorrect_points,
             ),
             completed_routine=payload.completed_routine,
         )
