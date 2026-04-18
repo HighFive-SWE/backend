@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Path, Query
 
 from controllers.progress_controller import progress_controller
 from views.progress_view import (
@@ -16,5 +16,8 @@ def create_progress(payload: ProgressCreateRequest) -> ProgressCreateResponse:
 
 
 @router.get("/{profile_id}", response_model=ProgressResponse)
-def get_progress(profile_id: str, limit: int = Query(25, ge=1, le=200)) -> ProgressResponse:
+def get_progress(
+    profile_id: str = Path(max_length=64),
+    limit: int = Query(25, ge=1, le=200),
+) -> ProgressResponse:
     return progress_controller.get_for(profile_id, limit=limit)

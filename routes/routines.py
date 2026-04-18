@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
 
 from controllers.routine_controller import routine_controller
 from views.routine_view import (
@@ -17,7 +17,7 @@ def list_routines() -> RoutineListResponse:
 
 
 @router.get("/{routine_id}", response_model=RoutineResponse)
-def get_routine(routine_id: str) -> RoutineResponse:
+def get_routine(routine_id: str = Path(max_length=64)) -> RoutineResponse:
     return routine_controller.get(routine_id)
 
 
@@ -27,10 +27,13 @@ def create_routine(payload: RoutineCreateRequest) -> RoutineResponse:
 
 
 @router.put("/{routine_id}", response_model=RoutineResponse)
-def update_routine(routine_id: str, payload: RoutineUpdateRequest) -> RoutineResponse:
+def update_routine(
+    payload: RoutineUpdateRequest,
+    routine_id: str = Path(max_length=64),
+) -> RoutineResponse:
     return routine_controller.update(routine_id, payload)
 
 
 @router.delete("/{routine_id}")
-def delete_routine(routine_id: str) -> dict:
+def delete_routine(routine_id: str = Path(max_length=64)) -> dict:
     return routine_controller.delete(routine_id)

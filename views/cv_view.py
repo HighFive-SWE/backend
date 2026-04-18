@@ -5,16 +5,20 @@ from pydantic import BaseModel, Field, field_validator
 from models.cv_result import CVResult
 
 
+# phase 9: accept normalized mediapipe coords but reject wildly out-of-range
+# values. mediapipe reports x/y in [0, 1] (with small overshoot allowed for
+# off-frame hands) and z typically in [-1, 1]. anything far outside that is
+# a bad client, not a legitimate frame.
 class LandmarkPoint(BaseModel):
-    x: float
-    y: float
-    z: float = 0.0
+    x: float = Field(ge=-2.0, le=2.0)
+    y: float = Field(ge=-2.0, le=2.0)
+    z: float = Field(default=0.0, ge=-5.0, le=5.0)
 
 
 class EvaluateRequest(BaseModel):
-    gesture_id: str
+    gesture_id: str = Field(min_length=1, max_length=64)
     landmarks: list[LandmarkPoint]
-    user_id: str | None = None
+    user_id: str | None = Field(default=None, max_length=64)
 
     @field_validator("landmarks")
     @classmethod
