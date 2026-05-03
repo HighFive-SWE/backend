@@ -25,6 +25,10 @@ class ProgressCreateRequest(BaseModel):
     succeeded: bool
     completed_routine: bool = False
     incorrect_points: list[int] = Field(default_factory=list, max_length=21)
+    # upg-7: client-supplied dedupe token. when present, a replay of the same
+    # token within the cache's ttl returns the original response instead of
+    # double-recording the attempt. optional so older clients keep working.
+    idempotency_key: str | None = Field(default=None, min_length=8, max_length=64)
 
     @field_validator("incorrect_points")
     @classmethod

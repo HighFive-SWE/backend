@@ -248,6 +248,36 @@ _SEED: list[Lesson] = [
         gesture_ids=["finished"],
         scenario_tag="daily",
     ),
+    # alphabet primer cards — one per letter, surfaced in the lessons feed so
+    # a browsing learner can discover the alphabet section without typing the
+    # url. each lesson binds to its `letter_*` gesture so the live mirror
+    # works straight from the lesson card.
+    Lesson(id="alphabet-a", title="letter a", description="closed fist with the thumb resting along the side — keep it flat, not tucked.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_a"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-b", title="letter b", description="four fingers up flat; thumb crosses the palm to meet the pinky base.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_b"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-c", title="letter c", description="fingers and thumb curve to form a relaxed letter c.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_c"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-d", title="letter d", description="index up; the other three curl down so their tips touch the thumb pad.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_d"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-e", title="letter e", description="fingers fold flat; thumb tucks horizontally across the fingertips.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_e"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-f", title="letter f", description="thumb and index pinch into an 'ok'; middle, ring, and pinky stay tall.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_f"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-g", title="letter g", description="fist on its side; thumb and index point forward in parallel.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_g"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-h", title="letter h", description="index and middle stacked, pointing sideways; the rest fold down.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_h"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-i", title="letter i", description="make a fist with the thumb across, then lift only the pinky.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_i"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-j", title="letter j", description="start in 'i'; trace a small j hook in the air with the pinky.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_j"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-k", title="letter k", description="index up, middle angled out; thumb rests in the v between them.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_k"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-l", title="letter l", description="thumb out sideways and index straight up — a clean 90° angle.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_l"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-m", title="letter m", description="fold the first three fingers down over the thumb; pinky stays curled.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_m"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-n", title="letter n", description="fold index and middle over the thumb; ring and pinky stay tight.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_n"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-o", title="letter o", description="all fingertips touch the thumb pad to form a round 'o'.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_o"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-p", title="letter p", description="make a 'k' shape, then tip the whole hand so the index aims at the floor.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_p"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-q", title="letter q", description="make a 'g', then tip the knuckles forward so it points downward.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_q"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-r", title="letter r", description="twist the index over the middle; the rest curl with thumb across.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_r"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-s", title="letter s", description="tight fist with the thumb wrapped over the front of the fingers.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_s"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-t", title="letter t", description="fold the fingers; let the thumb peek between index and middle knuckles.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_t"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-u", title="letter u", description="two fingers straight up and touching; ring and pinky curl over the thumb.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_u"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-v", title="letter v", description="index and middle up but split apart; the others fold tight.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_v"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-w", title="letter w", description="three fingers up like a fan; thumb pins the pinky across the palm.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_w"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-x", title="letter x", description="fist with the index out and bent at the middle knuckle — a small hook.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_x"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-y", title="letter y", description="extend thumb and pinky; the middle three fingers fold to the palm.", difficulty="starter", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_y"], scenario_tag="alphabet"),
+    Lesson(id="alphabet-z", title="letter z", description="point with the index and trace a clean z — three quick strokes.", difficulty="growing", tags=["alphabet", "fingerspelling"], gesture_ids=["letter_z"], scenario_tag="alphabet"),
 ]
 
 
