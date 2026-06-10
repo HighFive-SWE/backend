@@ -54,7 +54,7 @@ def test_settings_default_env_is_dev():
 def test_settings_cors_origins_from_env():
     with patch.dict(os.environ, {"HIGHFIVE_CORS_ORIGINS": "https://app.com"}):
         s = Settings()
-    assert "https://app.com" in s.cors_origins
+    assert s.cors_origins == ["https://app.com"]
 
 
 def test_settings_cors_origins_default_includes_localhost():
