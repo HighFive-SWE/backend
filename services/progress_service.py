@@ -30,6 +30,13 @@ def xp_for_level(level: int) -> int:
 DEFAULT_DAILY_TARGET = 3
 
 
+# --- day boundary ------------------------------------------------------------
+
+def _local_day(at: datetime, tz_offset_minutes: int) -> date:
+    """the learner's calendar day for a utc instant, given minutes east of utc."""
+    return (at.astimezone(timezone.utc) + timedelta(minutes=tz_offset_minutes)).date()
+
+
 # --- achievements ----------------------------------------------------------
 
 @dataclass(frozen=True)
@@ -76,6 +83,15 @@ class ProfileState:
     daily_progress: int = 0
     daily_target: int = DEFAULT_DAILY_TARGET
     achievements: dict[str, Achievement] = field(default_factory=dict)
+    # all-time counters, maintained on the write path so the summary stays
+    # truthful after the per-profile log deque starts evicting old records.
+    total_attempts: int = 0
+    successes: int = 0
+    accuracy_sum: float = 0.0
+    best_accuracy: float = 0.0
+    # last tz offset the client reported — used so summary's "today" (daily
+    # goal) agrees with the day boundary the write path used.
+    tz_offset_minutes: int = 0
 
 
 # --- service ---------------------------------------------------------------
@@ -106,7 +122,17 @@ class ProgressService:
         self._logs[record.profile_id].append(record)
 
         state = self._state[record.profile_id]
-        today = record.created_at.astimezone(timezone.utc).date()
+        state.total_attempts += 1
+        state.accuracy_sum += record.accuracy
+        state.best_accuracy = max(state.best_accuracy, record.accuracy)
+        if record.succeeded:
+            state.successes += 1
+
+        # bucket by the learner's calendar day, not the server's — a kid
+        # practising at 5:30pm two evenings running should always read as
+        # two consecutive days regardless of where the utc midnight falls.
+        state.tz_offset_minutes = record.tz_offset_minutes
+        today = _local_day(record.created_at, record.tz_offset_minutes)
         self._bump_streak(state, today)
 
         if record.succeeded:
@@ -139,18 +165,15 @@ class ProgressService:
         return list(self._logs.get(profile_id, ()))
 
     def summary(self, profile_id: str) -> ProgressSummary:
-        records = list(self._logs.get(profile_id, ()))
         state = self._state.get(profile_id, ProfileState())
-        total = len(records)
 
-        if total == 0:
-            avg_accuracy = 0.0
-            best = 0.0
-            successes = 0
-        else:
-            successes = sum(1 for r in records if r.succeeded)
-            avg_accuracy = round(sum(r.accuracy for r in records) / total, 4)
-            best = round(max(r.accuracy for r in records), 4)
+        # all-time figures come from the running counters, not the log — the
+        # deque caps at per_profile_capacity and would silently turn these
+        # into rolling-window stats for an active learner.
+        total = state.total_attempts
+        successes = state.successes
+        avg_accuracy = round(state.accuracy_sum / total, 4) if total else 0.0
+        best = round(state.best_accuracy, 4)
 
         level = level_for(state.total_xp)
         floor_xp = xp_for_level(level)
@@ -158,8 +181,10 @@ class ProgressService:
         xp_into_level = max(state.total_xp - floor_xp, 0)
         xp_to_next = max(next_level_xp - floor_xp, 1)
 
-        # daily goal resets lazily — if today's different from stored date, reset counter.
-        today = datetime.now(timezone.utc).date()
+        # daily goal resets lazily — if today's different from stored date,
+        # reset the counter. "today" uses the learner's last-reported offset
+        # so it agrees with the day boundary the write path used.
+        today = _local_day(datetime.now(timezone.utc), state.tz_offset_minutes)
         if state.daily_date != today:
             daily_progress = 0
         else:

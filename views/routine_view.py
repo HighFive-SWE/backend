@@ -30,3 +30,6 @@ class RoutineUpdateRequest(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=120)
     description: str | None = Field(default=None, max_length=400)
     steps: list[RoutineStepInput] | None = Field(default=None, min_length=2, max_length=6)
+    # interim ownership check until real auth lands: must match the routine's
+    # stored created_by, otherwise the edit is rejected with 403.
+    created_by: str | None = Field(default=None, max_length=64)

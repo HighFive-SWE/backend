@@ -57,6 +57,7 @@ class ProgressController:
                 attempts=payload.attempts,
                 succeeded=payload.succeeded,
                 incorrect_points=payload.incorrect_points,
+                tz_offset_minutes=payload.tz_offset_minutes,
             ),
             completed_routine=payload.completed_routine,
         )

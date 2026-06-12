@@ -49,6 +49,7 @@ class RoutineController:
         return RoutineResponse(routine=routine)
 
     def update(self, routine_id: str, payload: RoutineUpdateRequest) -> RoutineResponse:
+        self._check_ownership(routine_id, payload.created_by)
         steps = (
             [RoutineStep(gesture_id=s.gesture_id, prompt=s.prompt, hint=s.hint) for s in payload.steps]
             if payload.steps is not None
@@ -67,7 +68,8 @@ class RoutineController:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
         return RoutineResponse(routine=routine)
 
-    def delete(self, routine_id: str) -> dict:
+    def delete(self, routine_id: str, created_by: str | None = None) -> dict:
+        self._check_ownership(routine_id, created_by)
         try:
             self._service.delete(routine_id)
         except KeyError as exc:
@@ -75,6 +77,20 @@ class RoutineController:
         except ValueError as exc:
             raise HTTPException(status_code=422, detail=str(exc)) from exc
         return {"ok": True}
+
+    def _check_ownership(self, routine_id: str, claimed_by: str | None) -> None:
+        # interim guard until real auth lands: a custom routine can only be
+        # mutated by the profile that created it. seed routines fall through —
+        # the service already rejects mutating those with a 422.
+        try:
+            routine = self._service.get(routine_id)
+        except KeyError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        if routine.is_custom and routine.created_by and claimed_by != routine.created_by:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="only the profile that created this routine can change it",
+            )
 
 
 routine_controller = RoutineController()

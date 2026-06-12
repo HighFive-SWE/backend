@@ -29,6 +29,11 @@ class ProgressCreateRequest(BaseModel):
     # token within the cache's ttl returns the original response instead of
     # double-recording the attempt. optional so older clients keep working.
     idempotency_key: str | None = Field(default=None, min_length=8, max_length=64)
+    # learner-local minutes east of utc (js: -getTimezoneOffset()), so streak
+    # and daily-goal day boundaries follow the learner's clock instead of utc.
+    # optional — older clients default to 0 and keep the utc behaviour. bounds
+    # are the real-world utc offset range (-14:00 .. +14:00).
+    tz_offset_minutes: int = Field(default=0, ge=-840, le=840)
 
     @field_validator("incorrect_points")
     @classmethod

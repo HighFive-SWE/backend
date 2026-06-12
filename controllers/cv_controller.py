@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from fastapi import HTTPException, status
 
+from core.server_timing import segment
 from services.cv_service import CVService, cv_service
 from views.cv_view import (
     EvaluateRequest,
@@ -17,9 +18,12 @@ class CVController:
     def evaluate(self, payload: EvaluateRequest) -> EvaluateResponse:
         landmarks = [[p.x, p.y, p.z] for p in payload.landmarks]
         try:
-            record = self._service.evaluate(
-                payload.gesture_id, landmarks, user_id=payload.user_id
-            )
+            # surfaces in the Server-Timing header next to `app`, so the
+            # network tab shows comparator time vs framework overhead.
+            with segment("comparator"):
+                record = self._service.evaluate(
+                    payload.gesture_id, landmarks, user_id=payload.user_id
+                )
         except KeyError as exc:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

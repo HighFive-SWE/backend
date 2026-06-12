@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Path
+from fastapi import APIRouter, Path, Query
 
 from controllers.routine_controller import routine_controller
 from views.routine_view import (
@@ -35,5 +35,9 @@ def update_routine(
 
 
 @router.delete("/{routine_id}")
-def delete_routine(routine_id: str = Path(max_length=64)) -> dict:
-    return routine_controller.delete(routine_id)
+def delete_routine(
+    routine_id: str = Path(max_length=64),
+    # delete has no body, so the interim ownership claim rides a query param.
+    created_by: str | None = Query(default=None, max_length=64),
+) -> dict:
+    return routine_controller.delete(routine_id, created_by)

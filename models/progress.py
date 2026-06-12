@@ -17,6 +17,9 @@ class ProgressRecord(BaseModel):
     # the best sample of this attempt. phase 6 analytics uses it for the
     # finger heatmap. defaults to [] so older clients stay compatible.
     incorrect_points: list[int] = Field(default_factory=list)
+    # learner-local minutes east of utc at the time of the attempt — lets the
+    # streak engine bucket by the learner's calendar day, not the server's.
+    tz_offset_minutes: int = 0
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 

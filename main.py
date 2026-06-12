@@ -6,7 +6,9 @@ from fastapi.responses import JSONResponse
 from starlette.types import ASGIApp
 
 from core.config import settings
+from core.rate_limit import RateLimitMiddleware
 from core.request_id import RequestIdLogFilter, RequestIdMiddleware, current_request_id
+from core.server_timing import ServerTimingMiddleware
 from routes import analytics, cv, health, lessons, profiles, progress, routines
 
 
@@ -87,6 +89,10 @@ def create_app() -> FastAPI:
 # its contextvars visible to the handler. wrapping at the asgi layer puts the
 # request id in scope before fastapi's stack is even entered.
 fastapi_app: ASGIApp = create_app()
+# additive gates, innermost first: server-timing stamps a diagnostics header,
+# rate-limit meters the open POST endpoints (pass-through unless
+# HIGHFIVE_RATE_LIMIT is set). remove a line to remove the feature.
+fastapi_app = RateLimitMiddleware(ServerTimingMiddleware(fastapi_app))
 app: ASGIApp = RequestIdMiddleware(fastapi_app)
 
 
