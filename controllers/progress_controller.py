@@ -7,6 +7,8 @@ from models.progress import ProgressRecord
 from services.profile_service import profile_service
 from services.progress_service import ProgressService, progress_service
 from views.progress_view import (
+    DailyGoalUpdateRequest,
+    DailyGoalUpdateResponse,
     ProgressCreateRequest,
     ProgressCreateResponse,
     ProgressResponse,
@@ -87,6 +89,14 @@ class ProgressController:
         summary = self._service.summary(profile_id)
         recent = self._service.list_for(profile_id, limit=limit)
         return ProgressResponse(summary=summary, recent=recent)
+
+    def set_daily_goal(
+        self, profile_id: str, payload: DailyGoalUpdateRequest
+    ) -> DailyGoalUpdateResponse:
+        if not profile_service.exists(profile_id):
+            raise HTTPException(status_code=404, detail="profile not found")
+        self._service.set_daily_target(profile_id, payload.target)
+        return DailyGoalUpdateResponse(summary=self._service.summary(profile_id))
 
 
 progress_controller = ProgressController()

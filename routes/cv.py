@@ -12,5 +12,8 @@ def evaluate_gesture(payload: EvaluateRequest) -> EvaluateResponse:
 
 
 @router.get("/results", response_model=RecentResultsResponse)
-def recent_results(limit: int = Query(25, ge=1, le=200)) -> RecentResultsResponse:
-    return cv_controller.recent(limit=limit)
+def recent_results(
+    limit: int = Query(25, ge=1, le=200),
+    user_id: str | None = Query(default=None, max_length=64),
+) -> RecentResultsResponse:
+    return cv_controller.recent(limit=limit, user_id=user_id)

@@ -196,19 +196,25 @@ def test_create_checks_correct_profile_id(controller, mock_service):
 
 
 # --- update ---
+# update and delete check ownership first: the controller loads the routine
+# and compares the caller's created_by claim against the stored one, so
+# every test primes mock_service.get and passes a matching claim.
 
 def test_update_returns_routine_response(controller, mock_service):
     fake_routine = make_routine()
+    mock_service.get.return_value = fake_routine
     mock_service.update.return_value = fake_routine
 
-    result = controller.update("routine-1", make_update_request(name="New Name"))
+    result = controller.update(
+        "routine-1", make_update_request(name="New Name", created_by="profile-1")
+    )
 
     assert isinstance(result, RoutineResponse)
     assert result.routine == fake_routine
 
 
 def test_update_raises_404_on_key_error(controller, mock_service):
-    mock_service.update.side_effect = KeyError("not found")
+    mock_service.get.side_effect = KeyError("not found")
 
     with pytest.raises(HTTPException) as exc_info:
         controller.update("routine-1", make_update_request(name="X"))
@@ -217,26 +223,63 @@ def test_update_raises_404_on_key_error(controller, mock_service):
 
 
 def test_update_raises_422_on_value_error(controller, mock_service):
+    mock_service.get.return_value = make_routine()
     mock_service.update.side_effect = ValueError("invalid")
 
     with pytest.raises(HTTPException) as exc_info:
-        controller.update("routine-1", make_update_request(name="X"))
+        controller.update(
+            "routine-1", make_update_request(name="X", created_by="profile-1")
+        )
 
     assert exc_info.value.status_code == 422
 
 
-def test_update_passes_none_steps_when_not_provided(controller, mock_service):
+def test_update_rejects_wrong_owner(controller, mock_service):
+    mock_service.get.return_value = make_routine(created_by="profile-1")
+
+    with pytest.raises(HTTPException) as exc_info:
+        controller.update(
+            "routine-1", make_update_request(name="X", created_by="profile-2")
+        )
+
+    assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
+    mock_service.update.assert_not_called()
+
+
+def test_update_requires_ownership_claim(controller, mock_service):
+    mock_service.get.return_value = make_routine(created_by="profile-1")
+
+    with pytest.raises(HTTPException) as exc_info:
+        controller.update("routine-1", make_update_request(name="X"))
+
+    assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
+
+
+def test_update_skips_ownership_for_non_custom(controller, mock_service):
+    # seed routines are guarded by the service's own ValueError, not by the
+    # ownership check — the controller must not 403 them.
+    mock_service.get.return_value = make_routine(is_custom=False, created_by=None)
     mock_service.update.return_value = make_routine()
 
-    controller.update("routine-1", make_update_request(name="New"))
+    controller.update("routine-1", make_update_request(name="X"))
+
+    mock_service.update.assert_called_once()
+
+
+def test_update_passes_none_steps_when_not_provided(controller, mock_service):
+    mock_service.get.return_value = make_routine()
+    mock_service.update.return_value = make_routine()
+
+    controller.update("routine-1", make_update_request(name="New", created_by="profile-1"))
 
     _, call_kwargs = mock_service.update.call_args
     assert call_kwargs["steps"] is None
 
 
 def test_update_builds_steps_when_provided(controller, mock_service):
+    mock_service.get.return_value = make_routine()
     mock_service.update.return_value = make_routine()
-    payload = RoutineUpdateRequest(steps=[
+    payload = RoutineUpdateRequest(created_by="profile-1", steps=[
         RoutineStepInput(gesture_id="wave", prompt="Wave", hint="hint"),
         RoutineStepInput(gesture_id="point", prompt="Point", hint="hint2"),
     ])
@@ -251,9 +294,10 @@ def test_update_builds_steps_when_provided(controller, mock_service):
 
 
 def test_update_calls_service_with_correct_id(controller, mock_service):
+    mock_service.get.return_value = make_routine()
     mock_service.update.return_value = make_routine()
 
-    controller.update("routine-abc", make_update_request(name="X"))
+    controller.update("routine-abc", make_update_request(name="X", created_by="profile-1"))
 
     args, _ = mock_service.update.call_args
     assert args[0] == "routine-abc"
@@ -262,19 +306,42 @@ def test_update_calls_service_with_correct_id(controller, mock_service):
 # --- delete ---
 
 def test_delete_returns_ok(controller, mock_service):
-    result = controller.delete("routine-1")
+    mock_service.get.return_value = make_routine()
+
+    result = controller.delete("routine-1", created_by="profile-1")
 
     assert result == {"ok": True}
 
 
 def test_delete_calls_service_with_correct_id(controller, mock_service):
-    controller.delete("routine-abc")
+    mock_service.get.return_value = make_routine()
+
+    controller.delete("routine-abc", created_by="profile-1")
 
     mock_service.delete.assert_called_once_with("routine-abc")
 
 
+def test_delete_rejects_wrong_owner(controller, mock_service):
+    mock_service.get.return_value = make_routine(created_by="profile-1")
+
+    with pytest.raises(HTTPException) as exc_info:
+        controller.delete("routine-1", created_by="profile-2")
+
+    assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
+    mock_service.delete.assert_not_called()
+
+
+def test_delete_requires_ownership_claim(controller, mock_service):
+    mock_service.get.return_value = make_routine(created_by="profile-1")
+
+    with pytest.raises(HTTPException) as exc_info:
+        controller.delete("routine-1")
+
+    assert exc_info.value.status_code == status.HTTP_403_FORBIDDEN
+
+
 def test_delete_raises_404_on_key_error(controller, mock_service):
-    mock_service.delete.side_effect = KeyError("not found")
+    mock_service.get.side_effect = KeyError("not found")
 
     with pytest.raises(HTTPException) as exc_info:
         controller.delete("routine-1")
@@ -283,9 +350,10 @@ def test_delete_raises_404_on_key_error(controller, mock_service):
 
 
 def test_delete_raises_422_on_value_error(controller, mock_service):
+    mock_service.get.return_value = make_routine()
     mock_service.delete.side_effect = ValueError("cannot delete")
 
     with pytest.raises(HTTPException) as exc_info:
-        controller.delete("routine-1")
+        controller.delete("routine-1", created_by="profile-1")
 
     assert exc_info.value.status_code == 422

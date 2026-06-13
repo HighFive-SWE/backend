@@ -151,6 +151,9 @@ class ProgressService:
     def mark_routine_complete(self, profile_id: str, routine_id: str) -> None:
         self._completed_routines[profile_id].add(routine_id)
 
+    def set_daily_target(self, profile_id: str, target: int) -> None:
+        self._state[profile_id].daily_target = target
+
     # --- read path --------------------------------------------------------
 
     def list_for(self, profile_id: str, limit: int = 100) -> list[ProgressRecord]:

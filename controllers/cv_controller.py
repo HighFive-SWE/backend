@@ -42,8 +42,8 @@ class CVController:
             suggestion=self._service.suggestion_for(record.band),
         )
 
-    def recent(self, limit: int = 25) -> RecentResultsResponse:
-        return RecentResultsResponse(results=self._service.recent(limit=limit))
+    def recent(self, limit: int = 25, user_id: str | None = None) -> RecentResultsResponse:
+        return RecentResultsResponse(results=self._service.recent(limit=limit, user_id=user_id))
 
 
 cv_controller = CVController()

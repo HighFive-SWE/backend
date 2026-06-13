@@ -9,7 +9,7 @@ from core.config import settings
 from core.rate_limit import RateLimitMiddleware
 from core.request_id import RequestIdLogFilter, RequestIdMiddleware, current_request_id
 from core.server_timing import ServerTimingMiddleware
-from routes import analytics, cv, health, lessons, profiles, progress, routines
+from routes import analytics, cv, health, lessons, profiles, progress, routines, study
 
 
 def _configure_logging() -> None:
@@ -79,6 +79,7 @@ def create_app() -> FastAPI:
     app.include_router(profiles.router)
     app.include_router(progress.router)
     app.include_router(analytics.router)
+    app.include_router(study.router)
 
     return app
 

@@ -128,7 +128,7 @@ def test_recent_passes_default_limit(controller, mock_service):
 
     controller.recent()
 
-    mock_service.recent.assert_called_once_with(limit=25)
+    mock_service.recent.assert_called_once_with(limit=25, user_id=None)
 
 
 def test_recent_passes_custom_limit(controller, mock_service):
@@ -136,4 +136,12 @@ def test_recent_passes_custom_limit(controller, mock_service):
 
     controller.recent(limit=10)
 
-    mock_service.recent.assert_called_once_with(limit=10)
+    mock_service.recent.assert_called_once_with(limit=10, user_id=None)
+
+
+def test_recent_passes_user_filter(controller, mock_service):
+    mock_service.recent.return_value = []
+
+    controller.recent(limit=5, user_id="user-7")
+
+    mock_service.recent.assert_called_once_with(limit=5, user_id="user-7")

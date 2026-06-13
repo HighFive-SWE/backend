@@ -55,3 +55,12 @@ class ProgressCreateResponse(BaseModel):
 class ProgressResponse(BaseModel):
     summary: ProgressSummary
     recent: list[ProgressRecord]
+
+
+class DailyGoalUpdateRequest(BaseModel):
+    # parent-facing knob — bounds keep the goal meaningful for a kid's session.
+    target: int = Field(ge=1, le=50)
+
+
+class DailyGoalUpdateResponse(BaseModel):
+    summary: ProgressSummary

@@ -1,0 +1,4 @@
+# tooling for the test suite, on top of requirements.txt.
+# httpx powers starlette's TestClient.
+pytest==9.0.3
+httpx==0.28.1

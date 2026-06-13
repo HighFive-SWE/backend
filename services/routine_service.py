@@ -508,6 +508,127 @@ _SEED: list[Routine] = [
             RoutineStep(gesture_id="letter_i", prompt="2/2 · sign 'i'", hint="fist with the thumb across; lift only the pinky."),
         ],
     ),
+    # phase 9 expansion: feelings, family, and the world around the learner.
+    Routine(
+        id="big-feelings",
+        name="big feelings",
+        description="name the four big ones so they are easier to carry.",
+        scenario_tag="feelings",
+        steps=[
+            RoutineStep(gesture_id="happy", prompt="sign 'happy'", hint="flat hand brushing upward on the chest."),
+            RoutineStep(gesture_id="sad", prompt="sign 'sad'", hint="open hand slides down in front of the face."),
+            RoutineStep(gesture_id="angry", prompt="sign 'angry'", hint="claw hand at the face, pulled away sharply."),
+            RoutineStep(gesture_id="scared", prompt="sign 'scared'", hint="claw hands spring open at the chest."),
+        ],
+    ),
+    Routine(
+        id="love-and-family",
+        name="love and family",
+        description="mom, dad, baby, and the sign that holds them together.",
+        scenario_tag="family",
+        steps=[
+            RoutineStep(gesture_id="mom", prompt="sign 'mom'", hint="open hand, thumb taps the chin."),
+            RoutineStep(gesture_id="dad", prompt="sign 'dad'", hint="same hand, thumb taps the forehead."),
+            RoutineStep(gesture_id="baby", prompt="sign 'baby'", hint="arms stacked and rocking gently."),
+            RoutineStep(gesture_id="love", prompt="sign 'love'", hint="fists crossed over the heart."),
+        ],
+    ),
+    Routine(
+        id="ask-for-it",
+        name="ask for it",
+        description="want, more, please, thank you. the polite request loop.",
+        scenario_tag="manners",
+        steps=[
+            RoutineStep(gesture_id="want", prompt="sign 'want'", hint="claw hands pulled in toward your body."),
+            RoutineStep(gesture_id="more", prompt="ask for 'more'", hint="pinched fingertips tapped together."),
+            RoutineStep(gesture_id="please", prompt="say 'please'", hint="soft hand at the chest, small circle."),
+            RoutineStep(gesture_id="thank_you", prompt="say 'thank you'", hint="flat hand from chin outward."),
+        ],
+    ),
+    Routine(
+        id="hot-and-cold",
+        name="hot and cold",
+        description="temperature talk, then ask for a drink.",
+        scenario_tag="daily",
+        steps=[
+            RoutineStep(gesture_id="hot", prompt="sign 'hot'", hint="claw hand at the mouth, twisted away fast."),
+            RoutineStep(gesture_id="cold", prompt="sign 'cold'", hint="both fists raised and shaking."),
+            RoutineStep(gesture_id="water", prompt="ask for 'water'", hint="'w' shape, thumb across palm."),
+            RoutineStep(gesture_id="drink", prompt="ask to 'drink'", hint="c-shape hand tilted to your lips."),
+        ],
+    ),
+    Routine(
+        id="story-time",
+        name="story time",
+        description="settle in with a book and some music, then say goodnight.",
+        scenario_tag="home",
+        steps=[
+            RoutineStep(gesture_id="book", prompt="sign 'book'", hint="flat palms together, then open like covers."),
+            RoutineStep(gesture_id="music", prompt="sign 'music'", hint="flat hand waves over the forearm."),
+            RoutineStep(gesture_id="sleep", prompt="sign 'sleep'", hint="soft fingers drift down the face."),
+            RoutineStep(gesture_id="finished", prompt="sign 'finished'", hint="open palms flipped outward."),
+        ],
+    ),
+    Routine(
+        id="where-is-it",
+        name="where is it?",
+        description="ask where, then name the places you know.",
+        scenario_tag="communication",
+        steps=[
+            RoutineStep(gesture_id="where", prompt="ask 'where'", hint="index finger up, wagging side to side."),
+            RoutineStep(gesture_id="home", prompt="sign 'home'", hint="pinched fingertips from cheek to jaw."),
+            RoutineStep(gesture_id="school", prompt="sign 'school'", hint="flat palms clapping twice."),
+            RoutineStep(gesture_id="bathroom", prompt="sign 'bathroom'", hint="fist with thumb between index and middle."),
+        ],
+    ),
+    Routine(
+        id="good-or-bad",
+        name="good or bad",
+        description="fast answers: good, bad, yes, no.",
+        scenario_tag="communication",
+        steps=[
+            RoutineStep(gesture_id="good", prompt="sign 'good'", hint="flat hand from the chin lands palm up."),
+            RoutineStep(gesture_id="bad", prompt="sign 'bad'", hint="flat hand from the chin flips palm down."),
+            RoutineStep(gesture_id="yes", prompt="sign 'yes'", hint="closed fist, gentle nod motion."),
+            RoutineStep(gesture_id="no", prompt="sign 'no'", hint="index and middle out, snap to thumb."),
+        ],
+    ),
+    Routine(
+        id="ball-game",
+        name="ball game",
+        description="invite a friend, play ball, ask for one more round.",
+        scenario_tag="family",
+        steps=[
+            RoutineStep(gesture_id="come", prompt="beckon a friend", hint="index finger beckoning, palm up."),
+            RoutineStep(gesture_id="play", prompt="sign 'play'", hint="'y' hand, thumb and pinky out, shake."),
+            RoutineStep(gesture_id="ball", prompt="sign 'ball'", hint="curved fingers tap around an invisible ball."),
+            RoutineStep(gesture_id="more", prompt="ask for 'more'", hint="pinched fingertips tapped together."),
+            RoutineStep(gesture_id="finished", prompt="sign 'finished'", hint="open palms flipped outward."),
+        ],
+    ),
+    Routine(
+        id="spell-love",
+        name="spell 'love'",
+        description="four letters everyone wants to know.",
+        scenario_tag="alphabet",
+        steps=[
+            RoutineStep(gesture_id="letter_l", prompt="1/4 · sign 'l'", hint="thumb out sideways, index straight up."),
+            RoutineStep(gesture_id="letter_o", prompt="2/4 · sign 'o'", hint="fingertips meet the thumb in a round o."),
+            RoutineStep(gesture_id="letter_v", prompt="3/4 · sign 'v'", hint="index and middle up, split apart."),
+            RoutineStep(gesture_id="letter_e", prompt="4/4 · sign 'e'", hint="fingers fold flat, thumb tucks across."),
+        ],
+    ),
+    Routine(
+        id="spell-sun",
+        name="spell 'sun'",
+        description="three letters, three thumb positions to notice.",
+        scenario_tag="alphabet",
+        steps=[
+            RoutineStep(gesture_id="letter_s", prompt="1/3 · sign 's'", hint="tight fist, thumb wrapped over the front."),
+            RoutineStep(gesture_id="letter_u", prompt="2/3 · sign 'u'", hint="index and middle straight up, touching."),
+            RoutineStep(gesture_id="letter_n", prompt="3/3 · sign 'n'", hint="fold index and middle over the thumb."),
+        ],
+    ),
 ]
 
 

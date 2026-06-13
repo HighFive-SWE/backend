@@ -89,13 +89,23 @@ def test_create_routine_full_crud(client):
     assert get_resp.status_code == 200
     assert get_resp.json()["routine"]["name"] == "integration test routine"
 
-    # update it
-    update_resp = client.put(f"/routines/{routine_id}", json={"name": "updated name"})
+    # update and delete carry the owner's created_by claim — a missing or
+    # wrong claim gets a 403 on custom routines.
+    denied = client.put(f"/routines/{routine_id}", json={"name": "updated name"})
+    assert denied.status_code == 403
+
+    update_resp = client.put(
+        f"/routines/{routine_id}",
+        json={"name": "updated name", "created_by": "profile-alex"},
+    )
     assert update_resp.status_code == 200
     assert update_resp.json()["routine"]["name"] == "updated name"
 
-    # delete it
-    del_resp = client.delete(f"/routines/{routine_id}")
+    # delete it (claim rides a query param — delete has no body)
+    denied = client.delete(f"/routines/{routine_id}", params={"created_by": "profile-sam"})
+    assert denied.status_code == 403
+
+    del_resp = client.delete(f"/routines/{routine_id}", params={"created_by": "profile-alex"})
     assert del_resp.status_code == 200
     assert del_resp.json()["ok"] is True
 

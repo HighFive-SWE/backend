@@ -122,3 +122,25 @@ def test_seed_routine_cannot_be_deleted():
     svc = RoutineService(seed=seed)
     with pytest.raises(ValueError, match="seed routines cannot be deleted"):
         svc.delete("seed-1")
+
+
+# ── seed catalog integrity ────────────────────────────────────────────────────
+
+def test_every_seed_routine_binds_to_registered_gestures():
+    # seed routines skip create() validation, so this is the only guard
+    # keeping the shipped catalog scoreable by the comparator.
+    from core import vision_path  # noqa: F401
+    from vision import GESTURES
+
+    known = set(GESTURES.keys())
+    svc = RoutineService()
+    routines = svc.list_routines()
+    assert len(routines) > 0
+    for routine in routines:
+        assert len(routine.steps) <= MAX_STEPS, (
+            f"routine {routine.id} has {len(routine.steps)} steps"
+        )
+        for step in routine.steps:
+            assert step.gesture_id in known, (
+                f"routine {routine.id} references unknown gesture {step.gesture_id}"
+            )

@@ -46,3 +46,15 @@ def test_core_lessons_present(svc):
     ids = {l.id for l in svc.list_lessons()}
     for expected in ("hello", "water", "help", "stop", "yes", "no"):
         assert expected in ids
+
+
+def test_every_lesson_binds_to_a_registered_gesture(svc):
+    # the seed catalog must never reference a gesture the comparator
+    # cannot score; this guards every future library expansion.
+    from core import vision_path  # noqa: F401
+    from vision import GESTURES
+
+    known = set(GESTURES.keys())
+    for lesson in svc.list_lessons():
+        for gid in lesson.gesture_ids:
+            assert gid in known, f"lesson {lesson.id} references unknown gesture {gid}"

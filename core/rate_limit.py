@@ -16,7 +16,7 @@ _log = logging.getLogger("highfive.rate_limit")
 # client ip per path. unset (the dev default) the middleware is a transparent
 # pass-through — behaviour is byte-identical to not mounting it at all.
 
-LIMITED_PATHS = frozenset({"/cv/evaluate", "/progress"})
+LIMITED_PATHS = frozenset({"/cv/evaluate", "/progress", "/study/sessions"})
 
 # safety valve so the bucket map can't grow without bound on a long-lived
 # process being scanned by random clients.
