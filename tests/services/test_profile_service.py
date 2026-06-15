@@ -11,8 +11,9 @@ def svc():
 
 # ── seeded data ───────────────────────────────────────────────────────────────
 
-def test_seed_creates_three_profiles(svc):
-    assert len(svc.list_profiles()) == 3
+def test_seed_creates_profiles(svc):
+    # one parent plus a roster of child learners.
+    assert len(svc.list_profiles()) == 6
 
 
 def test_seed_profile_ids_present(svc):
@@ -33,7 +34,7 @@ def test_list_profiles_with_user_id_filter(svc):
     all_profiles = svc.list_profiles()
     user_id = all_profiles[0].user_id
     filtered = svc.list_profiles(user_id=user_id)
-    assert len(filtered) == 3
+    assert len(filtered) == 6
 
 
 def test_list_profiles_unknown_user_returns_empty(svc):

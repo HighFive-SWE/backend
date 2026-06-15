@@ -104,9 +104,9 @@ CREATE TABLE educator_group_members (
 	FOREIGN KEY(profile_id) REFERENCES profiles (id)
 );
 
-CREATE INDEX ix_educator_group_members_group_id ON educator_group_members (group_id);
-
 CREATE INDEX ix_educator_group_members_profile_id ON educator_group_members (profile_id);
+
+CREATE INDEX ix_educator_group_members_group_id ON educator_group_members (group_id);
 
 CREATE TABLE progress_logs (
 	id INTEGER NOT NULL, 

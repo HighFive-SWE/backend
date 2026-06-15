@@ -411,6 +411,22 @@ _SEED: list[Lesson] = [
         gesture_ids=["where"],
         scenario_tag="daily",
     ),
+    # jun 2026 expansion: time, animals, weather, and a few everyday verbs.
+    Lesson(id="name", title="name", description="two fingers of each hand cross and tap, like a quick 'x'.", difficulty="growing", tags=["communication", "daily"], gesture_ids=["name"], scenario_tag="daily"),
+    Lesson(id="again", title="again", description="a curved hand swings up and taps into the flat opposite palm.", difficulty="growing", tags=["communication", "daily"], gesture_ids=["again"], scenario_tag="daily"),
+    Lesson(id="now", title="now", description="both bent hands drop down once together, right here, right now.", difficulty="starter", tags=["time", "daily"], gesture_ids=["now"], scenario_tag="daily"),
+    Lesson(id="today", title="today", description="the 'now' motion repeated, settling on the day you are in.", difficulty="growing", tags=["time", "daily"], gesture_ids=["today"], scenario_tag="daily"),
+    Lesson(id="night", title="night", description="a curved hand bends down over the back of the other, like a setting sun.", difficulty="growing", tags=["time", "home"], gesture_ids=["night"], scenario_tag="home"),
+    Lesson(id="morning", title="morning", description="a flat hand rises from inside the opposite elbow, the sun coming up.", difficulty="growing", tags=["time", "home"], gesture_ids=["morning"], scenario_tag="home"),
+    Lesson(id="dog", title="dog", description="pat your leg, then snap, like calling a puppy over.", difficulty="starter", tags=["animals", "fun"], gesture_ids=["dog"], scenario_tag="family"),
+    Lesson(id="cat", title="cat", description="pinched fingers stroke outward from the cheek, drawing whiskers.", difficulty="starter", tags=["animals", "fun"], gesture_ids=["cat"], scenario_tag="family"),
+    Lesson(id="fish", title="fish", description="a flat hand wiggles forward through the water, fingers loose.", difficulty="starter", tags=["animals", "fun"], gesture_ids=["fish"], scenario_tag="family"),
+    Lesson(id="sun", title="sun", description="fingers point up and open out wide, rays spreading from a circle.", difficulty="starter", tags=["nature", "weather"], gesture_ids=["sun"], scenario_tag="daily"),
+    Lesson(id="rain", title="rain", description="curved hands drop down in little taps, fingers fluttering.", difficulty="growing", tags=["nature", "weather"], gesture_ids=["rain"], scenario_tag="daily"),
+    Lesson(id="car", title="car", description="both fists grip an invisible wheel and turn side to side.", difficulty="starter", tags=["things", "places"], gesture_ids=["car"], scenario_tag="daily"),
+    Lesson(id="open", title="open", description="flat hands start together, then swing apart like double doors.", difficulty="starter", tags=["actions", "daily"], gesture_ids=["open"], scenario_tag="daily"),
+    Lesson(id="big", title="big", description="two 'l' hands pull apart to show something large.", difficulty="starter", tags=["describe", "daily"], gesture_ids=["big"], scenario_tag="daily"),
+    Lesson(id="small", title="small", description="flat hands come close together, just a little gap between them.", difficulty="starter", tags=["describe", "daily"], gesture_ids=["small"], scenario_tag="daily"),
     # alphabet primer cards — one per letter, surfaced in the lessons feed so
     # a browsing learner can discover the alphabet section without typing the
     # url. each lesson binds to its `letter_*` gesture so the live mirror

@@ -8,9 +8,9 @@ from models.profile import AgeGroup, Profile, Role, User
 
 class ProfileService:
     """
-    in-memory profile + owner-account store. phase 5 has no auth or db yet —
-    every process run starts with one seeded parent and two child profiles so
-    the ui has something to switch between.
+    in-memory profile + owner-account store. phase 5 has no auth or db yet;
+    every process run starts with one seeded parent and a roster of child
+    profiles so the ui has something to switch between.
     """
 
     def __init__(self) -> None:
@@ -47,6 +47,30 @@ class ProfileService:
                 display_name="sam",
                 avatar="peach",
                 age_group=AgeGroup.middle,
+                role=Role.child,
+            ),
+            Profile(
+                id="profile-mia",
+                user_id=parent.id,
+                display_name="mia",
+                avatar="lilac",
+                age_group=AgeGroup.early,
+                role=Role.child,
+            ),
+            Profile(
+                id="profile-noah",
+                user_id=parent.id,
+                display_name="noah",
+                avatar="brand",
+                age_group=AgeGroup.middle,
+                role=Role.child,
+            ),
+            Profile(
+                id="profile-ava",
+                user_id=parent.id,
+                display_name="ava",
+                avatar="peach",
+                age_group=AgeGroup.early,
                 role=Role.child,
             ),
         ]

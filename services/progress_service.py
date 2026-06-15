@@ -103,13 +103,82 @@ class ProgressService:
     storage by profile_id so each learner has isolated progress.
     """
 
-    def __init__(self, per_profile_capacity: int = 500) -> None:
+    def __init__(self, per_profile_capacity: int = 500, *, seed_demo: bool = False) -> None:
         self._per_profile_capacity = per_profile_capacity
         self._logs: dict[str, Deque[ProgressRecord]] = defaultdict(
             lambda: deque(maxlen=per_profile_capacity)
         )
         self._completed_routines: dict[str, set[str]] = defaultdict(set)
         self._state: dict[str, ProfileState] = defaultdict(ProfileState)
+        # the live singleton seeds deterministic demo activity so the family
+        # and educator dashboards have something to show on a fresh server.
+        # tests and the db seeder construct ProgressService() without this, so
+        # they still start from a clean slate.
+        if seed_demo:
+            self._seed_demo()
+
+    # --- demo seed --------------------------------------------------------
+
+    def _seed_demo(self) -> None:
+        # imported lazily to avoid a circular import at module load: these
+        # modules don't depend on progress_service, but keeping the import here
+        # makes that independence explicit and future-proof.
+        import random
+
+        from services.profile_service import profile_service
+        from services.routine_service import _SEED as routine_seed
+
+        learners = [p for p in profile_service.list_profiles() if p.role.value == "child"]
+        routines = [r for r in routine_seed if len(r.steps) >= 2]
+        if not learners or not routines:
+            return
+
+        rng = random.Random(20260615)
+        now = datetime.now(timezone.utc)
+        # give each learner a slightly different history length so the
+        # dashboards don't look copy-pasted, oldest -> today so streaks climb.
+        for idx, learner in enumerate(learners):
+            days = 5 + idx * 2
+            for day_offset in range(days, -1, -1):
+                # anchor to midday so each record sits squarely inside its own
+                # calendar day, the consecutive days then read as a real streak
+                # regardless of what time the server happens to boot.
+                when = (now - timedelta(days=day_offset)).replace(
+                    hour=12, minute=rng.randint(0, 59), second=0, microsecond=0
+                )
+                for _ in range(rng.randint(1, 3)):
+                    routine = rng.choice(routines)
+                    last = len(routine.steps) - 1
+                    for i, step in enumerate(routine.steps):
+                        accuracy = round(rng.uniform(0.52, 0.99), 4)
+                        succeeded = accuracy >= 0.5
+                        incorrect = (
+                            []
+                            if accuracy >= 0.9
+                            else sorted(rng.sample(range(1, 21), rng.randint(1, 3)))
+                        )
+                        band = (
+                            "correct"
+                            if accuracy >= 0.85
+                            else "partial"
+                            if accuracy >= 0.5
+                            else "incorrect"
+                        )
+                        self.record(
+                            ProgressRecord(
+                                profile_id=learner.id,
+                                routine_id=routine.id,
+                                gesture_id=step.gesture_id,
+                                accuracy=accuracy,
+                                band=band,
+                                attempts=rng.randint(1, 3),
+                                succeeded=succeeded,
+                                incorrect_points=incorrect,
+                                tz_offset_minutes=0,
+                                created_at=when,
+                            ),
+                            completed_routine=(i == last and succeeded),
+                        )
 
     # --- write path -------------------------------------------------------
 
@@ -272,4 +341,4 @@ class ProgressService:
             unlock("ten_perfect_steps")
 
 
-progress_service = ProgressService()
+progress_service = ProgressService(seed_demo=True)
